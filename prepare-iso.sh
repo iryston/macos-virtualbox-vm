@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #
-# This script will create a bootable ISO image from the installer application for El Capitan (10.11) or the new Sierra (10.12) macOS.
+# This script will create a bootable ISO image from the installer application
+# for Yosemite (10.10), El Capitan (10.11), Sierra (10.12) or High Sierra (10.13).
 # Restructured a bit, and adapted the 10.11 script from this URL:
 # https://forums.virtualbox.org/viewtopic.php?f=22&t=77068&p=358865&hilit=elCapitan+iso#p358865
 #
@@ -142,25 +143,31 @@ function installerExists()
 # Eject installer disk in case it was opened after download from App Store
 hdiutil info | grep /dev/disk | grep partition | cut -f 1 | xargs hdiutil detach -force
 
-# See if we can find either the ElCapitan or the Sierra installer.
+# See if we can find any installer from the the High Sierra down to Yosemite.
 # If successful, then create the iso file from the installer.
 
-installerExists "Install macOS Sierra.app"
+installerExists "Install macOS High Sierra.app"
 result=$?
 if [ ${result} -eq 0 ] ; then
-  createISO "Install macOS Sierra.app" "Sierra"
+  createISO "Install macOS High Sierra.app" "HighSierra"
 else
-  installerExists "Install OS X El Capitan.app"
+  installerExists "Install macOS Sierra.app"
   result=$?
   if [ ${result} -eq 0 ] ; then
-    createISO "Install OS X El Capitan.app" "ElCapitan"
+    createISO "Install macOS Sierra.app" "Sierra"
   else
-    installerExists "Install OS X Yosemite.app"
+    installerExists "Install OS X El Capitan.app"
     result=$?
     if [ ${result} -eq 0 ] ; then
-      createISO "Install OS X Yosemite.app" "Yosemite"
+      createISO "Install OS X El Capitan.app" "ElCapitan"
     else
-      echo "Could not find installer for Yosemite (10.10), El Capitan (10.11) or Sierra (10.12)."
+      installerExists "Install OS X Yosemite.app"
+      result=$?
+      if [ ${result} -eq 0 ] ; then
+        createISO "Install OS X Yosemite.app" "Yosemite"
+      else
+        echo "Could not find installer for Yosemite (10.10), El Capitan (10.11), Sierra (10.12) or High Sierra (10.13)."
+      fi
     fi
   fi
 fi
