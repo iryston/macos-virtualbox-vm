@@ -143,7 +143,7 @@ function installerExists()
 # Eject installer disk in case it was opened after download from App Store
 hdiutil info | grep /dev/disk | grep partition | cut -f 1 | xargs hdiutil detach -force
 
-# See if we can find any installer from the the High Sierra down to Yosemite.
+# See if we can find any installer from High Sierra down to Yosemite.
 # If successful, then create the iso file from the installer.
 
 installerExists "Install macOS High Sierra.app"
